@@ -1,0 +1,103 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/images/favicon.png">
+    <link rel="stylesheet" href="/scss/css/w3schools27.css">
+    <link rel="stylesheet" href="/scss/css/index.css">
+    <title>Nodejs</title>
+</head>
+
+<body>
+    <div class="topnav1">
+        <a class="active" href="/">Home</a>
+        <a href="#news">News</a>
+        <a href="#contact">Contact</a>
+        <a href="#about">About</a>
+    </div>
+    <div class="form-holder">
+        <div class="back-background" onclick="hideForm()"></div>
+        <form class="w3-panel w3-card-4 addUserForm" action="/add-user" method="post">
+            <h2>Add User</h2>
+            <div class="w3-section">
+                <label>First name:</label>
+                <input class="w3-input w3-hover-grey" type="text" name="firstname">
+            </div>
+            <div class="w3-section">
+                <label>Last Name:</label>
+                <input class="w3-input w3-hover-grey" type="text" name="lastname">
+            </div>
+            <div class="w3-section">
+                <label>Email:</label>
+                <input class="w3-input w3-hover-grey" type="email" name="email">
+            </div>
+            <div class="w3-section">
+                <label>Address:</label>
+                <input class="w3-input w3-hover-grey" type="text" name="address">
+            </div>
+            <button type="submit" class="adduser-submit-button">Submit</button>
+        </form>
+    </div>
+    <div class="w3-container">
+        <h2 style="margin: 10px 0 0 0 !important;">List users:
+            <button class="open-adduser-form-button" onclick="showForm();">Add User</button>
+        </h2>
+        <table class="w3-table-all w3-hoverable">
+            <thead>
+                <tr class="user-table-header">
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for(let i=0; i< dataUser.length; i++) { %>
+                    <tr>
+                        <td>
+                            <%= dataUser[i].id %>
+                        </td>
+                        <td>
+                            <%= dataUser[i].firstname %>
+                        </td>
+                        <td>
+                            <%= dataUser[i].lastname %>
+                        </td>
+                        <td>
+                            <form class="user-option-form" action="/detail/user/<%=dataUser[i].id %>" method="get">
+                                <button type="submit" class="w3-btn w3-white w3-border w3-border-green">Details</button>
+                            </form>
+
+                            <form class="user-option-form" action="/detail/user/<%=dataUser[i].id %>" method="get">
+                                <button type="submit" class="w3-btn w3-white w3-border w3-border-green">Edit</button>
+                            </form>
+
+                            <!-- <form class="user-option-form" action="/delete-user/<%=dataUser[i].id %>" method="get">
+                                <button type="submit" class="w3-btn w3-white w3-border w3-border-green">Delete</button>
+                            </form> -->
+                            <form class="user-option-form" action="/delete-user" method="post">
+                                <input type="text" value="<%=dataUser[i].id %>" name="id" hidden>
+                                <button type="submit" class="w3-btn w3-white w3-border w3-border-green">Delete</button>
+                            </form>
+
+
+                        </td>
+                    </tr>
+                    <% } %>
+            </tbody>
+
+        </table>
+    </div>
+    <script>
+        hideForm = () => {
+            document.querySelectorAll(".form-holder")[0].style.display = "none";
+        }
+        showForm = () => {
+            document.querySelectorAll(".form-holder")[0].style.display = "block";
+        }
+    </script>
+</body>
+
+</html>

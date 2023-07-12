@@ -1,0 +1,170 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/images/favicon.png">
+    <link rel="stylesheet" href="/scss/css/w3schools27.css">
+    <link rel="stylesheet" href="/scss/css/index.css">
+    <title>Nodejs</title>
+</head>
+
+<body>
+    <div class="topnav1">
+        <a class="active" href="/">Home</a>
+        <a href="#news">News</a>
+        <a href="#contact">Contact</a>
+        <a href="#about">About</a>
+    </div>
+    <form class="w3-panel w3-card-4 details-form" action="/edit-user" method="post" enctype="multipart/form-data"
+        style="width: 90%; margin: 20px auto 10px auto;">
+        <h2>Details about <%=dataUser[0].firstname %>
+                <%=dataUser[0].lastname %>
+        </h2>
+        <img class="user-avatar" src="/images/<%=avatar_pic %>" alt="">
+        <div class="w3-section">
+            <label>First name:</label>
+            <!-- tao input an truyen id -->
+            <input class="w3-input w3-hover-grey" type="text" name="id" value="<%=dataUser[0].id %>"
+                style="display: none !important;">
+            <input class="w3-input w3-hover-grey" type="text" name="firstname" value="<%=dataUser[0].firstname %>">
+        </div>
+        <div class="w3-section">
+            <label>Last Name:</label>
+            <input class="w3-input w3-hover-grey" type="text" name="lastname" value="<%=dataUser[0].lastname %>">
+        </div>
+        <div class="w3-section">
+            <label>Email:</label>
+            <input class="w3-input w3-hover-grey" type="email" name="email" value="<%=dataUser[0].email %>">
+        </div>
+        <div class="w3-section">
+            <label>Address:</label>
+            <input class="w3-input w3-hover-grey" type="text" name="address" value="<%=dataUser[0].address %>">
+        </div>
+        <div class="w3-section">
+            <label>Change avatar:</label>
+            <input class="w3-input w3-hover-grey" type="file" name="avatar" value="">
+        </div>
+        <button type="submit" class="adduser-submit-button">Edit</button>
+    </form>
+    <!-- upload multiple image file -->
+    <form id="multiple-submit" class="upload-multipics-form" action="/add-pictures" method="post"
+        enctype="multipart/form-data">
+        <input id="multifiles" class=" inputfile" type="file" multiple name="multiple_pictures"
+            data-multiple-caption=" {count} files selected">
+        <input type="text" value="<%=dataUser[0].id %>" style="display: none;" name="user_id">
+        <label for="multifiles"> <img src="/images/uploadico.png" alt=""> Choose your
+            pictures...</label>
+    </form>
+    <div class="images-collection">
+        <h2>Photos of <%=dataUser[0].firstname %>
+                <%=dataUser[0].lastname %>
+        </h2>
+        <!-- Images used to open the lightbox -->
+        <div class="image-container">
+            <% for(let i=0; i< allPictures.length; i++) { %>
+                <div class="image-column">
+                    <img src="/images/<%=allPictures[i].img_id %>" onclick="openModal();currentSlide(i)"
+                        class="hover-shadow cursor">
+                </div>
+                <% } %>
+        </div>
+    </div>
+
+    <div id="myModal" class="modal">
+        <span class="close cursor" onclick="closeModal()">&times;</span>
+        <div class="modal-content">
+            <% for(let i=0; i< allPictures.length; i++) { %>
+                <div class="mySlides">
+                    <div class="numbertext">
+                        <%=i+1 %> / <%=allPictures.length %>
+                    </div>
+                    <img src="/images/<%=allPictures[i].img_id %>">
+                    <form action="/change-avatar" method="post" class="change-avatar-form">
+                        <input type="text" value="<%=dataUser[0].id %>" style="display: none;" name="user_id">
+                        <input type="text" value="<%=allPictures[i].img_id %>" style="display: none;" name="img_id">
+                        <button type="submit">Set as avatar</button>
+                    </form>
+                </div>
+                <% } %>
+                    <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+                    <a class="next" onclick="plusSlides(1)">&#10095;</a>
+
+                    <div class="caption-container">
+                        <p id="caption"></p>
+                    </div>
+                    <div class="preview-container">
+                        <% for(let i=0; i< allPictures.length; i++) { %>
+                            <div class="image-column">
+                                <img class="demo cursor" src="/images/<%=allPictures[i].img_id %>"
+                                    onclick="currentSlide(<%=i %>)" alt="<%=allPictures[0].dateadd %>">
+                            </div>
+                            <% } %>
+                    </div>
+        </div>
+    </div>
+
+    <script src="/js/jquery.js"></script>
+    <script>
+        var limit = 5;
+        $(document).ready(function () {
+            $('#multifiles').change(function () {
+                var files = $(this)[0].files;
+                if (files.length > limit) {
+                    alert("You can select max " + limit + " images.");
+                    $('#multifiles').val('');
+                    return false;
+                } else {
+                    $("#multiple-submit").submit();
+                    return true;
+                }
+            });
+        });
+    </script>
+    <script>
+        function openModal() {
+            document.getElementById("myModal").style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById("myModal").style.display = "none";
+        }
+
+        var slideIndex = 1;
+        showSlides(slideIndex);
+
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
+        }
+
+        function currentSlide(n) {
+            showSlides(slideIndex = n);
+        }
+
+        function showSlides(n) {
+            var i;
+            var slides = document.getElementsByClassName("mySlides");
+            var dots = document.getElementsByClassName("demo");
+            var captionText = document.getElementById("caption");
+            if (n > slides.length) { slideIndex = 1 }
+            if (n < 1) { slideIndex = slides.length }
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            for (i = 0; i < dots.length; i++) {
+                dots[i].className = dots[i].className.replace(" active", "");
+            }
+            slides[slideIndex - 1].style.display = "block";
+            dots[slideIndex - 1].className += " active";
+            captionText.innerHTML = dots[slideIndex - 1].alt;
+        }
+    </script>
+    <script>
+        addEventListener("resize", (event) => {
+
+        });
+    </script>
+</body>
+
+</html>
